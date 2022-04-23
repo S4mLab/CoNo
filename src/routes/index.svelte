@@ -168,8 +168,7 @@
         >
             <div
                 class="course_search_field z-60 flex items-center justify-center w-full relative"
-                on:click={() =>
-                    (displayCourseDropdown = !displayCourseDropdown)}
+                
             >
                 <input
                     type="text"
@@ -183,7 +182,7 @@
                     }}
                 />
                 <Icon
-                    src={VscTriangleDown}
+                    src={BsSearch}
                     className="absolute top-0 right-0 mt-[1rem] mr-[4%] w-[1.5rem] h-[1.5rem] cursor-pointer"
                 />
                 {#if displayCourseDropdown}
@@ -229,8 +228,6 @@
         >
             <div
                 class="major_search_field flex items-center justify-center w-full relative"
-                on:click={() =>
-                    (displayMajorDropdown = !displayMajorDropdown)}
             >
                 <input
                     type="text"
@@ -244,7 +241,7 @@
                     }}
                 />
                 <Icon
-                    src={VscTriangleDown}
+                    src={BsSearch}
                     className="absolute top-0 right-0 mt-[1rem] mr-[4%] w-[1.5rem] h-[1.5rem] cursor-pointer"
                 />
                 {#if displayMajorDropdown}
