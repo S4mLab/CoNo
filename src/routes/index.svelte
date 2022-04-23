@@ -6,7 +6,6 @@
     import { courseData } from "../datasource/universityCourses";
     import { country_code_list } from "../datasource/countryCode";
 
-
     import { uniData, searchUniversity } from "../stores/searchUniversity";
     import { goto } from "$app/navigation";
     let displayCountryDropdown = false;
@@ -98,7 +97,7 @@
         </div>
 
         <div
-            class="search_box rounded-lg drop-shadow-lg dark:drop-shadow-[8px_8px_7px_rgba(0,0,0,0.5)] py-2 border-r-3 flex w-[55%] bg-white"
+            class="search_box rounded-lg dark:drop-shadow-[8px_8px_7px_rgba(0,0,0,0.5)] py-2 border-r-3 flex w-[55%] bg-white"
             style="box-shadow: 0 8px 6px -10px #b3c6ff;"
         >
             <div
@@ -164,7 +163,7 @@
         </div>
 
         <div
-            class="search_box rounded-lg drop-shadow-lg dark:drop-shadow-[8px_8px_7px_rgba(0,0,0,0.5)] py-2 border-r-3 flex w-[55%] bg-white"
+            class="search_box rounded-lg dark:drop-shadow-[8px_8px_7px_rgba(0,0,0,0.5)] py-2 border-r-3 flex w-[55%] bg-white"
             style="box-shadow: 0 8px 6px -10px #b3c6ff;"
         >
             <div
@@ -223,7 +222,7 @@
             >
         </div>
         <div
-            class="major_search_box rounded-lg drop-shadow-lg dark:drop-shadow-[8px_8px_7px_rgba(0,0,0,0.5)] py-2 border-r-3 flex w-[55%] bg-white mb-16"
+            class="major_search_box rounded-lg dark:drop-shadow-[8px_8px_7px_rgba(0,0,0,0.5)] py-2 border-r-3 flex w-[55%] bg-white mb-16"
             style="box-shadow: 0 8px 6px -10px #b3c6ff;"
         >
             <div
