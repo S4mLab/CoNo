@@ -1,16 +1,16 @@
-import { initializeApp, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
-import { uuid } from 'uuidv4';
+// import { initializeApp, cert } from 'firebase-admin/app';
+// import { getFirestore } from 'firebase-admin/firestore';
+// import { uuid } from 'uuidv4';
 
-//const admin = require('firebase-admin');
+// //const admin = require('firebase-admin');
 
-//const serviceAccount = require('./key.json');
-const app = initializeApp({
-  credential: cert('./key.json'),
-  // databaseURL: 'https://<DATABASE_NAME>.firebaseio.com',
-});
+// //const serviceAccount = require('./key.json');
+// const app = initializeApp({
+//   credential: cert('./key.json'),
+//   // databaseURL: 'https://<DATABASE_NAME>.firebaseio.com',
+// });
 
-const firestore = getFirestore(app);
+// const firestore = getFirestore(app);
 
 export const courseData = {
   COS10003: {
@@ -941,6 +941,6 @@ export const courseData = {
   },
 };
 
-Object.entries(courseData).forEach(([key, value]) => {
-  firestore.collection('units').doc(uuid()).set({ key: value });
-});
+// Object.entries(courseData).forEach(([key, value]) => {
+//   firestore.collection('units').doc(uuid()).set({ key: value });
+// });
