@@ -398,6 +398,8 @@ const routes = parse(components, dictionary, matchers);
 const default_layout = components[0]();
 const default_error = components[1]();
 
+const root_stuff = {};
+
 // We track the scroll position associated with each history entry in sessionStorage,
 // rather than on history.state itself, because when navigation is driven by
 // popstate it's too late to update the scroll position associated with the
@@ -430,8 +432,10 @@ function create_client({ target, session, base, trailing_slash }) {
 	/** @type {Map<string, import('./types').NavigationResult>} */
 	const cache = new Map();
 
+
 	/** @type {Set<string>} */
 	const invalidated = new Set();
+
 
 	const stores = {
 		url: notifiable_store({}),
@@ -486,6 +490,7 @@ function create_client({ target, session, base, trailing_slash }) {
 
 		update(new URL(location.href), [], true);
 	});
+  
 	ready = true;
 
 	/** Keeps tracks of multiple navigations caused by redirects during rendering */
@@ -499,11 +504,13 @@ function create_client({ target, session, base, trailing_slash }) {
 	if (current_history_index === 0) {
 		// create initial history entry, so we can return here
 		history.replaceState({ ...history.state, [INDEX_KEY]: 0 }, '', location.href);
+
 	}
 
 	// if we reload the page, or Cmd-Shift-T back to it,
 	// recover scroll position
 	const scroll = scroll_positions[current_history_index];
+
 	if (scroll) scrollTo(scroll.x, scroll.y);
 
 	let hash_navigating = false;
@@ -562,6 +569,7 @@ function create_client({ target, session, base, trailing_slash }) {
 	}
 
 	/**
+
 	 * @param {URL} url
 	 * @param {string[]} redirect_chain
 	 * @param {boolean} no_cache
@@ -593,6 +601,7 @@ function create_client({ target, session, base, trailing_slash }) {
 
 		if (!navigation_result) {
 			await native_navigation(url);
+
 			return; // unnecessary, but TypeScript prefers it this way
 		}
 
@@ -702,6 +711,7 @@ function create_client({ target, session, base, trailing_slash }) {
 
 		const leaf_node = navigation_result.state.branch[navigation_result.state.branch.length - 1];
 		router_enabled = leaf_node?.module.router !== false;
+
 	}
 
 	/** @param {import('./types').NavigationResult} result */
@@ -736,6 +746,7 @@ function create_client({ target, session, base, trailing_slash }) {
 	 *   branch: Array<import('./types').BranchNode | undefined>;
 	 *   status: number;
 	 *   error?: Error;
+
 	 *   routeId: string | null;
 	 * }} opts
 	 */
@@ -758,6 +769,8 @@ function create_client({ target, session, base, trailing_slash }) {
 				url,
 				params,
 				branch,
+
+
 				session_id
 			},
 			props: {
@@ -770,7 +783,9 @@ function create_client({ target, session, base, trailing_slash }) {
 			result.props[`props_${i}`] = loaded ? await loaded.props : null;
 		}
 
+
 		if (!current.url || url.href !== current.url.href) {
+
 			result.props.page = { error, params, routeId, status, stuff, url };
 
 			// TODO remove this for 1.0
@@ -792,6 +807,7 @@ function create_client({ target, session, base, trailing_slash }) {
 		}
 
 		const leaf = filtered[filtered.length - 1];
+
 		const maxage = leaf.loaded && leaf.loaded.maxage;
 
 		if (maxage) {
@@ -806,6 +822,7 @@ function create_client({ target, session, base, trailing_slash }) {
 				unsubscribe();
 				clearTimeout(timeout);
 			};
+
 
 			const timeout = setTimeout(clear, maxage * 1000);
 
@@ -954,11 +971,14 @@ function create_client({ target, session, base, trailing_slash }) {
 		let branch = [];
 
 		/** @type {Record<string, any>} */
+
 		let stuff = {};
+
 		let stuff_changed = false;
 
 		/** @type {number | undefined} */
 		let status = 200;
+
 
 		/** @type {Error | undefined} */
 		let error;
@@ -982,7 +1002,9 @@ function create_client({ target, session, base, trailing_slash }) {
 					(changed.url && previous.uses.url) ||
 					changed.params.some((param) => previous.uses.params.has(param)) ||
 					(changed.session && previous.uses.session) ||
+
 					Array.from(previous.uses.dependencies).some((dep) => invalidated.has(dep)) ||
+
 					(stuff_changed && previous.uses.stuff);
 
 				if (changed_since_last_render) {
@@ -1036,6 +1058,7 @@ function create_client({ target, session, base, trailing_slash }) {
 						}
 
 						if (node.loaded) {
+
 							// TODO remove for 1.0
 							// @ts-expect-error
 							if (node.loaded.fallthrough) {
@@ -1043,6 +1066,7 @@ function create_client({ target, session, base, trailing_slash }) {
 									'fallthrough is no longer supported. Use matchers instead: https://kit.svelte.dev/docs/routing#advanced-routing-matching'
 								);
 							}
+
 
 							if (node.loaded.error) {
 								status = node.loaded.status;
@@ -1246,6 +1270,7 @@ function create_client({ target, session, base, trailing_slash }) {
 
 		accepted();
 
+
 		navigating++;
 
 		const current_navigating_token = (navigating_token = {});
@@ -1258,10 +1283,12 @@ function create_client({ target, session, base, trailing_slash }) {
 		}
 
 		await update(normalized, redirect_chain, false, {
+
 			scroll,
 			keepfocus,
 			details
 		});
+
 
 		navigating--;
 
@@ -1323,9 +1350,11 @@ function create_client({ target, session, base, trailing_slash }) {
 		goto: (href, opts = {}) => goto(href, opts, []),
 
 		invalidate: (resource) => {
+
 			const { href } = new URL(resource, location.href);
 
 			invalidated.add(href);
+
 
 			if (!invalidating) {
 				invalidating = Promise.resolve().then(async () => {
@@ -1458,6 +1487,7 @@ function create_client({ target, session, base, trailing_slash }) {
 				// Ignore if <a> has a target
 				if (is_svg_a_element ? a.target.baseVal : a.target) return;
 
+
 				if (url.href === location.href) {
 					if (!location.hash) event.preventDefault();
 					return;
@@ -1487,7 +1517,9 @@ function create_client({ target, session, base, trailing_slash }) {
 					redirect_chain: [],
 					details: {
 						state: {},
+
 						replaceState: false
+
 					},
 					accepted: () => event.preventDefault(),
 					blocked: () => event.preventDefault()

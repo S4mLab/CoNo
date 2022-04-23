@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+
 		"moduleResolution": "node",
 		"module": "es2020",
 		"lib": [
@@ -29,6 +30,7 @@
 		"rootDirs": [
 			"..",
 			"./types"
+
 		]
 	},
 	"include": [

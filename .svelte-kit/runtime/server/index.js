@@ -143,12 +143,14 @@ async function render_endpoint(event, mod) {
 	}
 
 	if (!handler) {
+
 		return event.request.headers.get('x-sveltekit-load')
 			? // TODO would be nice to avoid these requests altogether,
 			  // by noting whether or not page endpoints export `get`
 			  new Response(undefined, {
 					status: 204
 			  })
+
 			: new Response('Method not allowed', {
 					status: 405
 			  });
@@ -639,6 +641,7 @@ function sha256(data) {
 	if (!key[0]) precompute();
 
 	const out = init.slice(0);
+
 	const array = encode(data);
 
 	for (let i = 0; i < array.length; i += 16) {
@@ -789,6 +792,7 @@ function reverse_endianness(bytes) {
 }
 
 /** @param {string} str */
+
 function encode(str) {
 	const encoded = encoder.encode(str);
 	const length = encoded.length * 8;
@@ -1133,6 +1137,7 @@ async function render_response({
 	let rendered;
 
 	let is_private = false;
+
 	let maxage;
 
 	if (error) {
@@ -1148,6 +1153,7 @@ async function render_response({
 			// TODO probably better if `fetched` wasn't populated unless `hydrate`
 			if (fetched && page_config.hydrate) serialized_data.push(...fetched);
 			if (props) shadow_props = props;
+
 
 			if (uses_credentials) is_private = true;
 
@@ -1165,6 +1171,7 @@ async function render_response({
 				session: {
 					...session,
 					subscribe: (fn) => {
+
 						is_private = true;
 						return session.subscribe(fn);
 					}
@@ -1276,7 +1283,9 @@ async function render_response({
 	} else {
 		if (inlined_style) {
 			const attributes = [];
+
 			if (options.dev) attributes.push(' data-svelte');
+
 			if (csp.style_needs_nonce) attributes.push(` nonce="${csp.nonce}"`);
 
 			csp.add_style(inlined_style);
@@ -1354,6 +1363,7 @@ async function render_response({
 
 		if (maxage) {
 			http_equiv.push(`<meta http-equiv="cache-control" content="max-age=${maxage}">`);
+
 		}
 
 		if (http_equiv.length > 0) {
@@ -1374,8 +1384,10 @@ async function render_response({
 		etag: `"${hash(html)}"`
 	});
 
+
 	if (maxage) {
 		headers.set('cache-control', `${is_private ? 'private' : 'public'}, max-age=${maxage}`);
+
 	}
 
 	if (!options.floc) {
@@ -1424,11 +1436,13 @@ function serialize_error(error) {
 	return serialized;
 }
 
+
 /**
  * @param {import('types').LoadOutput} loaded
  * @returns {import('types').NormalizedLoadOutput}
  */
 function normalize(loaded) {
+
 	const has_error_status =
 		loaded.status && loaded.status >= 400 && loaded.status <= 599 && !loaded.redirect;
 	if (loaded.error || has_error_status) {
@@ -1554,6 +1568,7 @@ function normalize_path(path, trailing_slash) {
 }
 
 /**
+
  * @param {{
  *   event: import('types').RequestEvent;
  *   options: import('types').SSROptions;
@@ -1589,6 +1604,7 @@ async function load_node({
 	/** @type {Array<import('./types').Fetched>} */
 	const fetched = [];
 
+
 	/**
 	 * @type {string[]}
 	 */
@@ -1608,6 +1624,7 @@ async function load_node({
 		: {};
 
 	if (shadow.cookies) {
+
 		set_cookie_headers.push(...shadow.cookies);
 	}
 
@@ -1714,9 +1731,10 @@ async function load_node({
 					if (opts.credentials !== 'omit') {
 						uses_credentials = true;
 
+
 						const cookie = event.request.headers.get('cookie');
 						const authorization = event.request.headers.get('authorization');
-
+            
 						if (cookie) {
 							opts.headers.set('cookie', cookie);
 						}
@@ -1779,6 +1797,7 @@ async function load_node({
 					response = await options.hooks.externalFetch.call(null, external_request);
 				}
 
+
 				const proxy = new Proxy(response, {
 					get(response, key, _receiver) {
 						async function text() {
@@ -1787,6 +1806,7 @@ async function load_node({
 							/** @type {import('types').ResponseHeaders} */
 							const headers = {};
 							for (const [key, value] of response.headers) {
+
 								if (key === 'set-cookie') {
 									set_cookie_headers = set_cookie_headers.concat(value);
 								} else if (key !== 'etag') {
@@ -1877,6 +1897,7 @@ async function load_node({
 			throw new Error(`load function must return a value${options.dev ? ` (${node.entry})` : ''}`);
 		}
 
+
 		// TODO remove for 1.0
 		// @ts-expect-error
 		if (loaded.fallthrough) {
@@ -1910,6 +1931,7 @@ async function load_node({
 		loaded: normalize(loaded),
 		stuff: loaded.stuff || stuff,
 		fetched,
+
 		set_cookie_headers,
 		uses_credentials
 	};
