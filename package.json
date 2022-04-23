@@ -44,9 +44,15 @@
 	"dependencies": {
 		"daisyui": "^2.14.1",
 		"firebase": "^9.6.11",
+		"fs": "0.0.1-security",
 		"svelte-canvas": "^0.7.1",
 		"svelte-icons-pack": "^1.4.6",
 		"uuid": "^8.3.2",
 		"uuidv4": "^6.2.13"
-	}
+	},
+	"browser": {
+		"fs": false,
+		"path": false,
+		"os": false
+	  }
 }
