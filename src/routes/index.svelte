@@ -139,7 +139,7 @@
             >
                 <input
                     type="text"
-                    class="input w-full text-xl border-none bg-indigo-100"
+                    class="input w-full text-xl border-none bg-white"
                     placeholder="Search"
                     name="university"
                 />
@@ -168,11 +168,10 @@
         >
             <div
                 class="course_search_field z-60 flex items-center justify-center w-full relative"
-                
             >
                 <input
                     type="text"
-                    class="input input-course w-full text-xl border-none bg-indigo-100"
+                    class="input input-course w-full text-xl border-none bg-white"
                     placeholder="Search"
                     name="course"
                     bind:value={currentCourse}
@@ -231,7 +230,7 @@
             >
                 <input
                     type="text"
-                    class="input w-full text-xl border-none bg-indigo-100"
+                    class="input w-full text-xl border-none bg-white"
                     placeholder="Search"
                     name="course"
                     bind:value={currentMajor}
