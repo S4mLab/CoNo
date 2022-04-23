@@ -139,7 +139,7 @@
             >
                 <input
                     type="text"
-                    class="input w-full text-xl border-none"
+                    class="input w-full text-xl border-none bg-indigo-100"
                     placeholder="Search"
                     name="university"
                 />
@@ -168,10 +168,12 @@
         >
             <div
                 class="course_search_field z-60 flex items-center justify-center w-full relative"
+                on:click={() =>
+                    (displayCourseDropdown = !displayCourseDropdown)}
             >
                 <input
                     type="text"
-                    class="input input-course w-full text-xl border-none"
+                    class="input input-course w-full text-xl border-none bg-indigo-100"
                     placeholder="Search"
                     name="course"
                     bind:value={currentCourse}
@@ -227,10 +229,12 @@
         >
             <div
                 class="major_search_field flex items-center justify-center w-full relative"
+                on:click={() =>
+                    (displayMajorDropdown = !displayMajorDropdown)}
             >
                 <input
                     type="text"
-                    class="input w-full text-xl border-none"
+                    class="input w-full text-xl border-none bg-indigo-100"
                     placeholder="Search"
                     name="course"
                     bind:value={currentMajor}
