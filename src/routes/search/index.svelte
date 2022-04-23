@@ -21,9 +21,10 @@
     import BsSearch from "svelte-icons-pack/bs/BsSearch";
     import Icon from "svelte-icons-pack/Icon.svelte";
     import { flip } from "svelte/animate";
+    import SvelteTooltip from "svelte-tooltip";
     import { dndzone } from "svelte-dnd-action";
     import { courseDataReformat } from "../../datasource/universityCourses-reformat";
-
+    import SemesterVerticalList from "../../components/dragAndDrop/SemesterVerticalList.svelte";
     let currentCourse = "";
     let items = [...courseDataReformat];
     let coursePlanningData = [
@@ -31,71 +32,121 @@
             id: 1,
             year: 1,
             semester: {
-                "1": [
-                    "Introduction to Programming",
-                    "Software Engineering Fundamentals",
-                ],
+                "1": [],
                 "2": [],
                 "3": [],
+            },
+            droppable: {
+                "1": true,
+                "2": true,
+                "3": true,
             },
         },
         {
             id: 2,
             year: 2,
             semester: {
-                "1": [
-                    "Introduction to Programming",
-                    "Software Engineering Fundamentals",
-                ],
+                "1": [],
                 "2": [],
                 "3": [],
+            },
+            droppable: {
+                "1": true,
+                "2": true,
+                "3": true,
             },
         },
         {
             id: 3,
             year: 3,
             semester: {
-                "1": [
-                    "Introduction to Programming",
-                    "Software Engineering Fundamentals",
-                ],
+                "1": [],
                 "2": [],
                 "3": [],
+            },
+            droppable: {
+                "1": true,
+                "2": true,
+                "3": true,
             },
         },
         {
             id: 4,
             year: 4,
             semester: {
-                "1": [
-                    "Introduction to Programming",
-                    "Software Engineering Fundamentals",
-                ],
+                "1": [],
                 "2": [],
                 "3": [],
             },
+            droppable: {
+                "1": true,
+                "2": true,
+                "3": true,
+            },
         },
     ];
+    let isSearching = false;
+    let isDataChanged = false;
+    let courseDataSearchResult = [];
+    let chosenItem = [];
+    let chosenItemDestination = {
+        year: [],
+        semester: [],
+    };
     const flipDurationMs = 300;
     function handleDndConsider(e) {
+        chosenItem = items.filter((item) => item.id === e.detail.info.id);
+
         items = e.detail.items;
     }
     function handleDndFinalize(e) {
+        console.log("e: ", e);
         items = e.detail.items;
     }
-    const searchCourse = () => {
+    $: {
         if (currentCourse === "") {
-            return;
+            isSearching = false;
         }
+        console.log("course: ", coursePlanningData);
+
+        for (let i = 0; i < coursePlanningData.length; i++) {
+            for (let key in coursePlanningData[i].semester) {
+                if (chosenItem.length === 1 && chosenItem[0].requisites) {
+                    let requisites = chosenItem[0].requisites;
+                    if (
+                        requisites.prerequisites &&
+                        requisites.prerequisites.length > 0
+                    ) {
+                        for (let prerequisiteCourseCode in requisites.prerequisites) {
+                        }
+                    }
+                }
+            }
+            // coursePlanningData[i].semester.forEach((semesterItem, index) => {
+            //     if (chosenItem.length === 1 && chosenItem[0].requisites) {
+            //         let requisites = chosenItem[0].requisites;
+            //         if (
+            //             requisites.prerequisites &&
+            //             requisites.prerequisites.length > 0
+            //         ) {
+            //             for (let prerequisiteCourseCode in requisites.prerequisites) {
+            //                 // if (prerequisiteCourseCode === )
+            //             }
+            //         }
+            //     }
+            // });
+        }
+    }
+    const searchCourse = () => {
+        courseDataSearchResult = [];
         var courseReg = new RegExp(currentCourse);
 
-        let courseDataSearchResult = [];
         items.forEach((item, index) => {
             if (item.title.toLowerCase().match(courseReg)) {
                 courseDataSearchResult.push(item);
             }
         });
-        items = courseDataSearchResult;
+        isSearching = true;
     };
 </script>
 
@@ -112,30 +163,23 @@
             <div class="semester-container flex items-center justify-around ">
                 {#each Object.entries(planningData.semester) as [semesterNumber, semesterData]}
                     <div
-                        class="semester-{semesterNumber} min-h-[17rem] w-[20vw] border border-1 dark:border-black border-indigo-100 rounded-md hover:scale-[1.03] drop-shadow-md dark:drop-shadow-[2px_2px_3px_rgba(0,0,0,0.5)] duration-300"
+                        class="semester-{semesterNumber} min-h-[17rem] w-[20vw] border border-1 dark:border-gray-500 border-indigo-100 rounded-md hover:scale-[1.03] drop-shadow-md dark:drop-shadow-[2px_2px_3px_rgba(0,0,0,0.2)] duration-300"
                     >
                         <div
-                            class="semester-header flex items-center justify-center py-2 bg-indigo-100 dark:bg-black rounded-tl-md rounded-tr-md"
+                            class="semester-header flex items-center justify-center py-2 bg-indigo-100 dark:bg-slate-600 rounded-tl-md rounded-tr-md"
                         >
                             <h1
-                                class="font-[500] text-2xl text-blue-400 dark:text-cyan-200"
+                                class="font-[500] text-3xl text-blue-400 dark:text-white text-shadow"
                             >
                                 Semester {semesterNumber}
                             </h1>
                         </div>
-                        <section use:dndzone={{ items, flipDurationMs }}>
-                            {#each semesterData as semesterCourse}
-                                <div
-                                    class="dropped-item flex items-center justify-center my-2"
-                                >
-                                    <p
-                                        class="text-xl font-[500] text-black dark:text-white text-center border border-l-[6px] border-indigo-500 dark:border-cyan-100 hover:bg-indigo-500 dark:hover:bg-cyan-100 hover:text-white dark:hover:text-black hover:font-[600] duration-200 border-y-0 w-full border-r-[6px] "
-                                    >
-                                        {semesterCourse}
-                                    </p>
-                                </div>
-                            {/each}
-                        </section>
+                        <SemesterVerticalList
+                            semester={semesterNumber}
+                            year={planningData.year}
+                            items={semesterData}
+                            chosenItemData={chosenItem}
+                        />
                     </div>
                 {/each}
             </div>
@@ -165,33 +209,33 @@
             on:finalize={handleDndFinalize}
             class="w-full self-start"
         >
-            {#each items as courseInfo (courseInfo.id)}
-                <div
-                    animate:flip={{ duration: flipDurationMs }}
-                    class="course-data-result cursor-grab max-w-[30vw]"
-                >
-                    <p
-                        class="text-[1vw] truncate font-[500] py-2 pl-4 w-full dark:text-slate-50 dark:hover:text-black hover:bg-indigo-50 dark:hover:bg-cyan-100 text-lg"
+            {#if isSearching}
+                {#each courseDataSearchResult as courseInfo (courseInfo.id)}
+                    <div
+                        animate:flip={{ duration: flipDurationMs }}
+                        class="course-data-result cursor-grab max-w-[30vw]"
                     >
-                        {courseInfo.code} - {courseInfo.title}
-                    </p>
-                </div>
-            {/each}
+                        <p
+                            class="text-[1vw] truncate font-[500] py-2 pl-4 w-full dark:text-slate-50 dark:hover:text-black hover:bg-indigo-50 dark:hover:bg-cyan-100 text-lg"
+                        >
+                            {courseInfo.code} - {courseInfo.title}
+                        </p>
+                    </div>
+                {/each}
+            {:else}
+                {#each items as courseInfo (courseInfo.id)}
+                    <div
+                        animate:flip={{ duration: flipDurationMs }}
+                        class="course-data-result cursor-grab max-w-[30vw]"
+                    >
+                        <p
+                            class="text-[1vw] truncate font-[500] py-2 pl-4 w-full dark:text-slate-50 dark:hover:text-black hover:bg-indigo-50 dark:hover:bg-cyan-100 text-lg"
+                        >
+                            {courseInfo.code} - {courseInfo.title}
+                        </p>
+                    </div>
+                {/each}
+            {/if}
         </section>
-        <!-- <section
-            use:dndzone={{ items, flipDurationMs }}
-            on:consider={handleDndConsider}
-            on:finalize={handleDndFinalize}
-        >
-            {#each items as courseInfo (courseInfo.id)}
-                <div
-                    class="course-data-result self-start py-2 pl-4 w-full bg-[red] cursor-grab hover:bg-indigo-50"
-                >
-                    <p class="text-[1vw] truncate font-[500]">
-                        {courseInfo.id} - {courseInfo.name}
-                    </p>
-                </div>
-            {/each}
-        </section> -->
     </div>
 </div>
