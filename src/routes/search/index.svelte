@@ -21,7 +21,7 @@
     import BsSearch from "svelte-icons-pack/bs/BsSearch";
     import Icon from "svelte-icons-pack/Icon.svelte";
     import { flip } from "svelte/animate";
-    import SvelteTooltip from "svelte-tooltip";
+//     import SvelteTooltip from "svelte-tooltip";
     import { dndzone } from "svelte-dnd-action";
     import { courseDataReformat } from "../../datasource/universityCourses-reformat";
     import SemesterVerticalList from "../../components/dragAndDrop/SemesterVerticalList.svelte";
